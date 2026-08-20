@@ -1,4 +1,3 @@
-import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class Principal {
@@ -6,177 +5,200 @@ public class Principal {
     public static void main(String[] args) {
 
         Scanner teclado = new Scanner(System.in);
-        DecimalFormat formato = new DecimalFormat("0.00");
-
-        System.out.println("Ingresa tu nombre: ");
-        String nombre = teclado.nextLine();
-
-        System.out.println("Ingresa el nombre de usuario: ");
-        String nombreUsuario = teclado.nextLine();
-
-        System.out.println("Ingresa tu edad: ");
-        int edad = teclado.nextInt();
-        teclado.nextLine();
-
-        Usuario usuario = new Usuario(nombre, nombreUsuario, edad);
+        Biblioteca biblioteca = new Biblioteca();
 
         int opcion = 0;
 
-        while (opcion != 9) {
+        while (opcion != 10) {
 
-            System.out.println("\n--- Calificación a películas :) ---");
-            System.out.println("\n1. Nuevo usuario");
-            System.out.println("2. Registrar nueva calificacion");
-            System.out.println("3. Consultar calificaciones");
-            System.out.println("4. Consultar una pelicula");
-            System.out.println("5. Modificar calificacion");
-            System.out.println("6. Mostrar promedio");
-            System.out.println("7. Mostrar mejor y peor calificacion");
-            System.out.println("8. Consultar espacios disponibles");
-            System.out.println("9. Salir");
-            System.out.println("Ingresa una opcion: ");
+            try {
+                System.out.println("\n- BIBLIOTECA -");
+                System.out.println("1. Registrar prestamo");
+                System.out.println("2. Consultar prestamos");
+                System.out.println("3. Buscar prestamo");
+                System.out.println("4. Modificar prestamo");
+                System.out.println("5. Registrar devolucion");
+                System.out.println("6. Consultar prestamos por estudiante");
+                System.out.println("7. Reporte de dias autorizados");
+                System.out.println("8. Prestamo con mayor duracion");
+                System.out.println("9. Cantidad de prestamos");
+                System.out.println("10. Salir");
+                System.out.println("Ingrese una opcion: ");
 
-            opcion = teclado.nextInt();
-            teclado.nextLine();
+                opcion = teclado.nextInt();
+                teclado.nextLine();
 
-            switch (opcion) {
+                switch (opcion) {
 
-                case 1:
+                    case 1: {
+                        System.out.println("Ingrese el codigo del prestamo:");
+                        String codigo = teclado.nextLine();
 
-                    System.out.println("Ingresa el nuevo nombre: ");
-                    nombre = teclado.nextLine();
+                        Prestamo existente = biblioteca.buscarPrestamo(codigo);
 
-                    System.out.println("Ingresa el nuevo nombre de usuario: ");
-                    nombreUsuario = teclado.nextLine();
+                        if (existente == null) {
 
-                    System.out.println("Ingresa la nueva edad: ");
-                    edad = teclado.nextInt();
-                    teclado.nextLine();
+                            System.out.println("Ingresa el carne del estudiante:");
+                            String carne = teclado.nextLine();
 
-                    usuario = new Usuario(nombre, nombreUsuario, edad);
+                            System.out.println("Ingresa el nombre del estudiante:");
+                            String nombre = teclado.nextLine();
 
-                    System.out.println("Nuevo usuario creado.");
-                    break;
+                            System.out.println("Ingresa el titulo del libro:");
+                            String titulo = teclado.nextLine();
 
-                case 2:
+                            System.out.println("Ingresa los dias autorizados:");
+                            int dias = teclado.nextInt();
+                            teclado.nextLine();
 
-                    System.out.println("Ingrese una calificacion entre 1 y 10: ");
-                    int calificacion = teclado.nextInt();
-                    teclado.nextLine();
+                            if (dias > 0) {
+                                Prestamo prestamo = new Prestamo(codigo, carne, nombre, titulo, dias);
+                                biblioteca.agregarPrestamo(prestamo);
 
-                    boolean registrado = usuario.registrarCalificacion(calificacion);
+                                System.out.println("Se registró el prestamo.");
+                            } else {
+                                System.out.println("Los dias deben ser mayores a 0.");
+                            }
 
-                    if (registrado == true) {
-                        System.out.println("Calificacion registrada.");
-                    }
-                    else {
-                        System.out.println("No se pudo registrar la calificacion.");
-                        System.out.println("1. Verifica que la calificación sea entre 1 y 10.");
-                        System.out.println("2. Verifica que exista un espacio.");
-                    }
+                        } else {
+                            System.out.println("Ya existe un prestamo con ese codigo.");
+                        }
 
-                    break;
-
-                case 3:
-
-                    if (usuario.getCantidadCalificaciones() == 0) {
-                        System.out.println("No hay peliculas calificadas.");
-                    }
-                    else {
-                        System.out.println("Calificaciones registradas:");
-                        System.out.println(usuario.consultarCalificaciones());
+                        break;
                     }
 
-                    break;
+                    case 2: {
+                        if (biblioteca.cantidadPrestamos() > 0) {
+                            biblioteca.mostrarPrestamos();
+                        } else {
+                            System.out.println("No hay prestamos registrados.");
+                        }
 
-                case 4:
-
-                    System.out.println("Ingresa el numero de pelicula: ");
-                    int numeroPelicula = teclado.nextInt();
-                    teclado.nextLine();
-
-                    int nota = usuario.consultarPelicula(numeroPelicula);
-
-                    if (nota == -1) {
-                        System.out.println("La pelicula indicada no ha sido registrada.");
-                    }
-                    else {
-                        System.out.println("La pelicula " + numeroPelicula
-                                + " tiene una calificacion de " + nota);
+                        break;
                     }
 
-                    break;
+                    case 3: {
+                        System.out.println("Ingrese el codigo del prestamo:");
+                        String codigo = teclado.nextLine();
 
-                case 5:
+                        Prestamo prestamo = biblioteca.buscarPrestamo(codigo);
 
-                    System.out.println("Ingresa el numero de pelicula que desea modificar: ");
-                    numeroPelicula = teclado.nextInt();
+                        if (prestamo != null) {
+                            System.out.println("Codigo: " + prestamo.getCodigoPrestamo());
+                            System.out.println("Carne: " + prestamo.getCarne());
+                            System.out.println("Nombre: " + prestamo.getNombreEstudiante());
+                            System.out.println("Titulo: " + prestamo.getTituloLibro());
+                            System.out.println("Dias autorizados: " + prestamo.getDiasAutorizados());
+                        } else {
+                            System.out.println("No se encontro el prestamo.");
+                        }
 
-                    System.out.println("Ingresa la nueva calificacion entre 1 y 10: ");
-                    int nuevaCalificacion = teclado.nextInt();
-                    teclado.nextLine();
-
-                    boolean modificado = usuario.modificarCalificacion(
-                            numeroPelicula, nuevaCalificacion);
-
-                    if (modificado == true) {
-                        System.out.println("Calificacion modificada.");
-                    }
-                    else {
-                        System.out.println("No se pudo modificar la calificacion.");
-                        System.out.println("Verifica el numero de pelicula y la calificacion.");
+                        break;
                     }
 
-                    break;
+                    case 4: {
+                        System.out.println("Ingresa el codigo del prestamo que desea modificar:");
+                        String codigo = teclado.nextLine();
 
-                case 6:
+                        Prestamo prestamo = biblioteca.buscarPrestamo(codigo);
 
-                    if (usuario.getCantidadCalificaciones() == 0) {
-                        System.out.println("No hay calificaciones para calcular el promedio.");
+                        if (prestamo != null) {
+
+                            System.out.println("Ingresa el nuevo titulo del libro:");
+                            String titulo = teclado.nextLine();
+
+                            System.out.println("Ingresa la nueva cantidad de dias autorizados:");
+                            int dias = teclado.nextInt();
+                            teclado.nextLine();
+
+                            if (dias > 0) {
+                                biblioteca.modificarPrestamo(codigo, titulo, dias);
+                                System.out.println("Prestamo modificado correctamente.");
+                            } else {
+                                System.out.println("Los dias deben ser mayores a 0.");
+                            }
+
+                        } else {
+                            System.out.println("No se encontro el prestamo.");
+                        }
+
+                        break;
                     }
-                    else {
-                        float promedio = usuario.calcularPromedio();
 
-                        System.out.println("El promedio de las calificaciones es: "
-                                + formato.format(promedio));
+                    case 5: {
+                        System.out.println("Ingresa el codigo del prestamo que desea devolver:");
+                        String codigo = teclado.nextLine();
+
+                        boolean eliminado = biblioteca.eliminarPrestamo(codigo);
+
+                        if (eliminado == true) {
+                            System.out.println("Devolucion registrada correctamente.");
+                        } else {
+                            System.out.println("No se encontro el prestamo.");
+                        }
+
+                        break;
                     }
 
-                    break;
+                    case 6: {
+                        System.out.println("Ingresa el carne del estudiante:");
+                        String carne = teclado.nextLine();
 
-                case 7:
+                        biblioteca.buscarPorCarne(carne);
 
-                    if (usuario.getCantidadCalificaciones() == 0) {
-                        System.out.println("No hay ninguna calificación registrada.");
-                    }
-                    else {
-                        int mayor = usuario.obtenerMayorCalificacion();
-                        int menor = usuario.obtenerMenorCalificacion();
-
-                        System.out.println("La mejor calificacion es: " + mayor);
-                        System.out.println("La peor calificacion es: " + menor);
+                        break;
                     }
 
-                    break;
+                    case 7: {
+                        int totalDias = biblioteca.calcularTotalDias();
 
-                case 8:
+                        System.out.println("Total de dias autorizados: " + totalDias);
 
-                    System.out.println("Peliculas calificadas: "
-                            + usuario.getCantidadCalificaciones());
+                        break;
+                    }
 
-                    System.out.println("Espacios disponibles: "
-                            + usuario.espaciosDisponibles());
+                    case 8: {
+                        Prestamo mayor = biblioteca.prestamoMayorDias();
 
-                    break;
+                        if (mayor != null) {
+                            System.out.println("Prestamo con mayor duracion:");
+                            System.out.println("Codigo: " + mayor.getCodigoPrestamo());
+                            System.out.println("Carne: " + mayor.getCarne());
+                            System.out.println("Nombre: " + mayor.getNombreEstudiante());
+                            System.out.println("Titulo: " + mayor.getTituloLibro());
+                            System.out.println("Dias autorizados: " + mayor.getDiasAutorizados());
+                        } else {
+                            System.out.println("No hay prestamos registrados.");
+                        }
 
-                case 9:
+                        break;
+                    }
 
-                    System.out.println("Saliste del programa.");
-                    break;
+                    case 9: {
+                        System.out.println("Cantidad de prestamos: " + biblioteca.cantidadPrestamos());
 
-                default:
+                        break;
+                    }
 
-                    System.out.println("Opcion invalida.");
-                    break;
+                    case 10: {
+                        System.out.println("Saldrás del programa");
+                        break;
+                    }
+
+                    default: {
+                        System.out.println("Opcion no válida.");
+                        break;
+                    }
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error. Ingresa un dato valido.");
+                teclado.nextLine();
+
+            } finally {
+                if (opcion != 10) {
+                    System.out.println("Operación finalizada, regrresarás al menu principal.");
+                }
             }
         }
 
