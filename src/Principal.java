@@ -1,4 +1,3 @@
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Principal {
@@ -6,363 +5,469 @@ public class Principal {
     public static void main(String[] args) {
 
         Scanner teclado = new Scanner(System.in);
+        DulceEstacion dulceEstacion = new DulceEstacion();
 
-        System.out.println("- AGENCIA DE DETECTIVES -");
+        dulceEstacion.registrarMaquina(
+            new MaquinaPalomitas("P001", "PopStar", "P100",
+                    100, 80, true)
+        );
 
-        System.out.println("Ingrese el nombre del caso:");
-        String nombreCaso = teclado.nextLine();
+        dulceEstacion.registrarMaquina(
+            new MaquinaPalomitas("P002", "PopStar", "P200",
+                    90, 60, false)
+        );
 
-        System.out.println("Ingrese el codigo de identificacion:");
-        String codigoIdentificacion = teclado.nextLine();
+        dulceEstacion.registrarMaquina(
+            new MaquinaAlgodon("A001", "DulceMax", "A100",
+                    120, 1200)
+        );
 
-        System.out.println("Ingrese el nombre del detective responsable:");
-        String detectiveResponsable = teclado.nextLine();
+        dulceEstacion.registrarMaquina(
+            new MaquinaAlgodon("A002", "DulceMax", "A200",
+                    110, 900)
+        );
 
-        Caso caso = new Caso(nombreCaso, codigoIdentificacion, detectiveResponsable);
+        dulceEstacion.registrarMaquina(
+            new FuenteChocolate("C001", "ChocoMax", "C100",
+                    150, 2.5)
+        );
+
+        dulceEstacion.registrarMaquina(
+            new FuenteChocolate("C002", "ChocoMax", "C200",
+                    180, 4.0)
+        );
 
         int opcion = 0;
 
-        while (opcion != 12) {
+        while (opcion != 7) {
 
             try {
 
-                System.out.println("\n- MENU PRINCIPAL -");
-                System.out.println("1. Registrar ubicacion");
-                System.out.println("2. Consultar ubicaciones");
-                System.out.println("3. Consultar una ubicacion");
-                System.out.println("4. Modificar ubicacion");
-                System.out.println("5. Descartar ubicacion");
-                System.out.println("6. Registrar pista");
-                System.out.println("7. Consultar pistas");
-                System.out.println("8. Buscar pista");
-                System.out.println("9. Modificar pista");
-                System.out.println("10. Eliminar pista");
-                System.out.println("11. Mostrar estadisticas");
-                System.out.println("12. Salir");
-                System.out.println("Ingrese una opcion:");
+                System.out.println("\n - DULCE ESTACIÓN - ");
+                System.out.println("1. Registrar maquina");
+                System.out.println("2. Consultar inventario");
+                System.out.println("3. Cotizar alquiler");
+                System.out.println("4. Alquilar maquina");
+                System.out.println("5. Registrar devolucion");
+                System.out.println("6. Reporte general");
+                System.out.println("7. Salir");
+                System.out.print("Seleccione una opcion: ");
 
                 opcion = teclado.nextInt();
                 teclado.nextLine();
 
                 switch (opcion) {
 
-                    case 1: {
+                    case 1:
 
-                        System.out.println("Ingrese la posicion de la ubicacion (0-4):");
-                        int posicion = teclado.nextInt();
+                        System.out.println("\n = REGISTRAR MAQUINA =");
+                        System.out.println("1. Maquina de palomitas");
+                        System.out.println("2. Maquina de algodon");
+                        System.out.println("3. Fuente de chocolate");
+                        System.out.print("Seleccione el tipo: ");
+
+                        int tipo = teclado.nextInt();
                         teclado.nextLine();
 
-                        System.out.println("Ingrese el codigo de la ubicacion:");
+                        System.out.print("Codigo de inventario: ");
                         String codigo = teclado.nextLine();
 
-                        System.out.println("Ingrese el nombre de la ubicacion:");
-                        String nombre = teclado.nextLine();
+                        if (codigo.isEmpty()) {
+                            System.out.println(
+                                "El codigo no puede estar vacio"
+                            );
+                            break;
+                        }
 
-                        System.out.println("Ingrese la direccion:");
-                        String direccion = teclado.nextLine();
+                        if (dulceEstacion.buscarMaquina(codigo) != null) {
+                            System.out.println(
+                                "Ya existe una maquina con ese codigo"
+                            );
+                            break;
+                        }
 
-                        System.out.println("Ingrese el nivel de riesgo (1-10):");
-                        int nivelRiesgo = teclado.nextInt();
-                        teclado.nextLine();
+                        System.out.print("Marca: ");
+                        String marca = teclado.nextLine();
 
-                        System.out.println("Ingrese el estado:");
-                        String estado = teclado.nextLine();
+                        System.out.print("Modelo: ");
+                        String modelo = teclado.nextLine();
 
-                        Ubicacion ubicacion = new Ubicacion(
-                            codigo,
-                            nombre,
-                            direccion,
-                            nivelRiesgo,
-                            estado
+                        System.out.print("Tarifa diaria: Q");
+                        double tarifa = teclado.nextDouble();
+
+                        if (tarifa <= 0) {
+                            System.out.println(
+                                "La tarifa debe ser mayor que cero"
+                            );
+                            break;
+                        }
+
+                        if (tipo == 1) {
+
+                            System.out.print("Porciones por hora: ");
+                            int porciones = teclado.nextInt();
+
+                            if (porciones <= 0) {
+                                System.out.println(
+                                    "Las porciones deben ser mayores que cero"
+                                );
+                                break;
+                            }
+
+                            System.out.println("¿Tiene carrito integrado?");
+                            System.out.println("1. Si");
+                            System.out.println("2. No");
+                            int carrito = teclado.nextInt();
+
+                            boolean tieneCarrito;
+
+                            if (carrito == 1) {
+                                tieneCarrito = true;
+                            } else if (carrito == 2) {
+                                tieneCarrito = false;
+                            } else {
+                                System.out.println(
+                                    "Opcion de carrito no valida"
+                                );
+                                break;
+                            }
+
+                            MaquinaPalomitas nueva =
+                                new MaquinaPalomitas(
+                                    codigo,
+                                    marca,
+                                    modelo,
+                                    tarifa,
+                                    porciones,
+                                    tieneCarrito
+                                );
+
+                            dulceEstacion.registrarMaquina(nueva);
+
+                            System.out.println(
+                                "Maquina registrada correctamente"
+                            );
+
+                        } else if (tipo == 2) {
+
+                            System.out.print("Potencia en vatios: ");
+                            int potencia = teclado.nextInt();
+
+                            if (potencia <= 0) {
+                                System.out.println(
+                                    "La potencia debe ser mayor que cero"
+                                );
+                                break;
+                            }
+
+                            MaquinaAlgodon nueva =
+                                new MaquinaAlgodon(
+                                    codigo,
+                                    marca,
+                                    modelo,
+                                    tarifa,
+                                    potencia
+                                );
+
+                            dulceEstacion.registrarMaquina(nueva);
+
+                            System.out.println(
+                                "Maquina registrada correctamente"
+                            );
+
+                        } else if (tipo == 3) {
+
+                            System.out.print(
+                                "Capacidad maxima en kilogramos: "
+                            );
+                            double capacidad = teclado.nextDouble();
+
+                            if (capacidad <= 0) {
+                                System.out.println(
+                                    "La capacidad debe ser mayor que cero"
+                                );
+                                break;
+                            }
+
+                            FuenteChocolate nueva =
+                                new FuenteChocolate(
+                                    codigo,
+                                    marca,
+                                    modelo,
+                                    tarifa,
+                                    capacidad
+                                );
+
+                            dulceEstacion.registrarMaquina(nueva);
+
+                            System.out.println(
+                                "Fuente registrada correctamente"
+                            );
+
+                        } else {
+                            System.out.println(
+                                "Tipo de maquina no valido"
+                            );
+                        }
+
+                        break;
+
+                    case 2:
+
+                        System.out.println("\n- INVENTARIO -");
+                        System.out.println(
+                            dulceEstacion.consultarInventario()
                         );
 
-                        caso.registrarUbicacion(posicion, ubicacion);
-
-                        System.out.println("Ubicacion registrada correctamente.");
-
                         break;
-                    }
 
-                    case 2: {
+                    case 3:
 
-                        System.out.println(caso.consultarUbicaciones());
+                        System.out.println("\n- COTIZACION -");
 
-                        break;
-                    }
+                        System.out.print(
+                            "Ingrese el codigo de la maquina: "
+                        );
+                        String codigoCotizar = teclado.nextLine();
 
-                    case 3: {
+                        Maquina maquinaCotizar =
+                            dulceEstacion.buscarMaquina(codigoCotizar);
 
-                        System.out.println("Ingrese la posicion de la ubicacion:");
-                        int posicion = teclado.nextInt();
-                        teclado.nextLine();
-
-                        Ubicacion ubicacion = caso.consultarUbicacion(posicion);
-
-                        if (ubicacion != null) {
-                            System.out.println(ubicacion);
-                        } else {
-                            System.out.println("No hay una ubicacion en esa posicion.");
+                        if (maquinaCotizar == null) {
+                            System.out.println(
+                                "No existe una maquina con ese codigo"
+                            );
+                            break;
                         }
 
-                        break;
-                    }
-
-                    case 4: {
-
-                        System.out.println("Ingrese la posicion de la ubicacion:");
-                        int posicion = teclado.nextInt();
+                        System.out.print(
+                            "Ingrese la cantidad de dias: "
+                        );
+                        int diasCotizar = teclado.nextInt();
                         teclado.nextLine();
 
-                        Ubicacion ubicacion = caso.consultarUbicacion(posicion);
-
-                        if (ubicacion != null) {
-
-                            System.out.println("Ingrese el nuevo nivel de riesgo (1-10):");
-                            int nivelRiesgo = teclado.nextInt();
-                            teclado.nextLine();
-
-                            System.out.println("Ingrese el nuevo estado:");
-                            String estado = teclado.nextLine();
-
-                            caso.modificarUbicacion(posicion, nivelRiesgo, estado);
-
-                            System.out.println("Ubicacion modificada correctamente.");
-
-                        } else {
-                            System.out.println("No hay una ubicacion en esa posicion.");
+                        if (diasCotizar <= 0) {
+                            System.out.println(
+                                "Los dias deben ser mayores que cero"
+                            );
+                            break;
                         }
 
-                        break;
-                    }
-
-                    case 5: {
-
-                        System.out.println("Ingrese la posicion de la ubicacion:");
-                        int posicion = teclado.nextInt();
-                        teclado.nextLine();
-
-                        Ubicacion ubicacion = caso.consultarUbicacion(posicion);
-
-                        if (ubicacion != null) {
-                            caso.descartarUbicacion(posicion);
-                            System.out.println("Ubicacion descartada correctamente.");
-                        } else {
-                            System.out.println("No hay una ubicacion en esa posicion.");
-                        }
-
-                        break;
-                    }
-
-                    case 6: {
-
-                        System.out.println("Ingrese el codigo de la pista:");
-                        String codigo = teclado.nextLine();
-
-                        Pista existente = caso.buscarPista(codigo);
-
-                        if (existente == null) {
-
-                            System.out.println("Ingrese la descripcion:");
-                            String descripcion = teclado.nextLine();
-
-                            System.out.println("Ingrese el tipo de evidencia:");
-                            String tipoEvidencia = teclado.nextLine();
-
-                            System.out.println("Ingrese el nivel de importancia (1-10):");
-                            int nivelImportancia = teclado.nextInt();
-
-                            System.out.println("Ingrese el nivel de confiabilidad (0-100):");
-                            int nivelConfiabilidad = teclado.nextInt();
-                            teclado.nextLine();
-
-                            Pista pista = new Pista(
-                                codigo,
-                                descripcion,
-                                tipoEvidencia,
-                                nivelImportancia,
-                                nivelConfiabilidad
+                        double cotizacion =
+                            dulceEstacion.cotizar(
+                                codigoCotizar,
+                                diasCotizar
                             );
 
-                            caso.registrarPista(pista);
+                        System.out.println("\nDatos de la maquina:");
+                        System.out.println(maquinaCotizar);
 
-                            System.out.println("Pista registrada correctamente.");
-
-                        } else {
-                            System.out.println("Ya existe una pista con ese codigo.");
-                        }
-
-                        break;
-                    }
-
-                    case 7: {
-
-                        if (caso.contarPistas() > 0) {
-                            System.out.println(caso.consultarPistas());
-                        } else {
-                            System.out.println("No hay pistas registradas.");
-                        }
-
-                        break;
-                    }
-
-                    case 8: {
-
-                        System.out.println("Ingrese el codigo de la pista:");
-                        String codigo = teclado.nextLine();
-
-                        Pista pista = caso.buscarPista(codigo);
-
-                        if (pista != null) {
-                            System.out.println(pista);
-                        } else {
-                            System.out.println("No se encontro la pista.");
-                        }
-
-                        break;
-                    }
-
-                    case 9: {
-
-                        System.out.println("Ingrese el codigo de la pista que desea modificar:");
-                        String codigo = teclado.nextLine();
-
-                        Pista pista = caso.buscarPista(codigo);
-
-                        if (pista != null) {
-
-                            System.out.println("Ingrese la nueva descripcion:");
-                            String descripcion = teclado.nextLine();
-
-                            System.out.println("Ingrese el nuevo tipo de evidencia:");
-                            String tipoEvidencia = teclado.nextLine();
-
-                            System.out.println("Ingrese el nuevo nivel de importancia (1-10):");
-                            int nivelImportancia = teclado.nextInt();
-
-                            System.out.println("Ingrese el nuevo nivel de confiabilidad (0-100):");
-                            int nivelConfiabilidad = teclado.nextInt();
-                            teclado.nextLine();
-
-                            caso.modificarPista(
-                                codigo,
-                                descripcion,
-                                tipoEvidencia,
-                                nivelImportancia,
-                                nivelConfiabilidad
-                            );
-
-                            System.out.println("Pista modificada correctamente.");
-
-                        } else {
-                            System.out.println("No se encontro la pista.");
-                        }
-
-                        break;
-                    }
-
-                    case 10: {
-
-                        System.out.println("Ingrese el codigo de la pista que desea eliminar:");
-                        String codigo = teclado.nextLine();
-
-                        Pista pista = caso.buscarPista(codigo);
-
-                        if (pista != null) {
-                            caso.eliminarPista(codigo);
-                            System.out.println("Pista eliminada correctamente.");
-                        } else {
-                            System.out.println("No se encontro la pista.");
-                        }
-
-                        break;
-                    }
-
-                    case 11: {
-
-                        System.out.println("- ESTADISTICAS -");
-
-                        System.out.println(
-                            "Cantidad de ubicaciones registradas: "
-                            + caso.contarUbicaciones()
+                        System.out.printf(
+                            "Costo total: Q%.2f%n",
+                            cotizacion
                         );
 
                         System.out.println(
-                            "Espacios disponibles: "
-                            + caso.contarEspaciosDisponibles()
+                            "Esta cotizacion no modifica los ingresos."
                         );
 
-                        Ubicacion mayorRiesgo = caso.ubicacionMayorRiesgo();
+                        break;
 
-                        if (mayorRiesgo != null) {
+                    case 4:
+
+                        System.out.println("\n- ALQUILAR MAQUINA -");
+
+                        System.out.print(
+                            "Ingrese el codigo de la maquina: "
+                        );
+                        String codigoAlquiler = teclado.nextLine();
+
+                        Maquina maquinaAlquiler =
+                            dulceEstacion.buscarMaquina(codigoAlquiler);
+
+                        if (maquinaAlquiler == null) {
                             System.out.println(
-                                "Ubicacion con mayor riesgo: " + mayorRiesgo
+                                "No existe una maquina con ese codigo"
                             );
-                        } else {
-                            System.out.println("No hay ubicaciones registradas.");
+                            break;
                         }
+
+                        if (!maquinaAlquiler.getDisponible()) {
+                            System.out.println(
+                                "La maquina ya se encuentra alquilada"
+                            );
+                            break;
+                        }
+
+                        System.out.print(
+                            "Ingrese la cantidad de dias: "
+                        );
+                        int diasAlquiler = teclado.nextInt();
+                        teclado.nextLine();
+
+                        if (diasAlquiler <= 0) {
+                            System.out.println(
+                                "Los dias deben ser mayores que cero"
+                            );
+                            break;
+                        }
+
+                        double total =
+                            dulceEstacion.cotizar(
+                                codigoAlquiler,
+                                diasAlquiler
+                            );
+
+                        System.out.printf(
+                            "Total del alquiler: Q%.2f%n",
+                            total
+                        );
+
+                        System.out.println("¿Desea confirmar?");
+                        System.out.println("1. Si");
+                        System.out.println("2. No");
+
+                        int confirmar = teclado.nextInt();
+                        teclado.nextLine();
+
+                        if (confirmar == 1) {
+
+                            dulceEstacion.alquilar(
+                                codigoAlquiler,
+                                diasAlquiler
+                            );
+
+                            System.out.println(
+                                "Alquiler confirmado correctamente"
+                            );
+
+                        } else if (confirmar == 2) {
+
+                            System.out.println(
+                                "Alquiler cancelado. No se realizaron cambios."
+                            );
+
+                        } else {
+
+                            System.out.println(
+                                "Opcion no valida. No se realizaron cambios."
+                            );
+                        }
+
+                        break;
+
+                    case 5:
+
+                        System.out.println("\n- DEVOLUCION -");
+
+                        System.out.print(
+                            "Ingrese el codigo de la maquina: "
+                        );
+                        String codigoDevolucion = teclado.nextLine();
+
+                        Maquina maquinaDevolucion =
+                            dulceEstacion.buscarMaquina(codigoDevolucion);
+
+                        if (maquinaDevolucion == null) {
+
+                            System.out.println(
+                                "No existe una maquina con ese codigo"
+                            );
+
+                        } else if (maquinaDevolucion.getDisponible()) {
+
+                            System.out.println(
+                                "La maquina ya se encuentra disponible"
+                            );
+
+                        } else {
+
+                            dulceEstacion.devolver(codigoDevolucion);
+
+                            System.out.println(
+                                "Devolucion registrada correctamente"
+                            );
+                        }
+
+                        break;
+
+                    case 6:
+
+                        System.out.println("\n--- REPORTE GENERAL ---");
 
                         System.out.println(
-                            "Cantidad de pistas registradas: "
-                            + caso.contarPistas()
+                            "Total de maquinas: "
+                            + dulceEstacion.getCantidadMaquinas()
                         );
 
-                        if (caso.contarPistas() > 0) {
+                        System.out.println("\nPalomitas:");
+                        System.out.println(
+                            "Disponibles: "
+                            + dulceEstacion.contarDisponiblesPorCategoria(
+                                "Palomitas"
+                            )
+                        );
+                        System.out.println(
+                            "Alquiladas: "
+                            + dulceEstacion.contarAlquiladasPorCategoria(
+                                "Palomitas"
+                            )
+                        );
 
-                            System.out.println(
-                                "Pista con mayor importancia: "
-                                + caso.pistaMayorImportancia()
-                            );
+                        System.out.println("\nAlgodon:");
+                        System.out.println(
+                            "Disponibles: "
+                            + dulceEstacion.contarDisponiblesPorCategoria(
+                                "Algodon"
+                            )
+                        );
+                        System.out.println(
+                            "Alquiladas: "
+                            + dulceEstacion.contarAlquiladasPorCategoria(
+                                "Algodon"
+                            )
+                        );
 
-                            System.out.println(
-                                "Pista con mayor confiabilidad: "
-                                + caso.pistaMayorConfiabilidad()
-                            );
+                        System.out.println("\nChocolate:");
+                        System.out.println(
+                            "Disponibles: "
+                            + dulceEstacion.contarDisponiblesPorCategoria(
+                                "Chocolate"
+                            )
+                        );
+                        System.out.println(
+                            "Alquiladas: "
+                            + dulceEstacion.contarAlquiladasPorCategoria(
+                                "Chocolate"
+                            )
+                        );
 
-                            System.out.println(
-                                "Promedio del nivel de importancia: "
-                                + caso.promedioImportancia()
-                            );
-
-                        } else {
-                            System.out.println(
-                                "No hay pistas registradas para realizar los calculos."
-                            );
-                        }
+                        System.out.printf(
+                            "%nDinero acumulado: Q%.2f%n",
+                            dulceEstacion.getDineroAcumulado()
+                        );
 
                         break;
-                    }
 
-                    case 12: {
+                    case 7:
 
-                        System.out.println("Saldras del programa.");
-
+                        System.out.println("Programa finalizado.");
                         break;
-                    }
 
-                    default: {
+                    default:
 
-                        System.out.println("Opcion no valida.");
-
-                        break;
-                    }
+                        System.out.println(
+                            "Seleccione una opcion valida"
+                        );
                 }
 
-            } catch (InputMismatchException e) {
+            } catch (Exception e) {
 
-                System.out.println("Error. Ingresa un numero valido.");
+                System.out.println(
+                    "Entrada no valida. Intente nuevamente."
+                );
+
                 teclado.nextLine();
-
-            } catch (IllegalArgumentException e) {
-
-                System.out.println("Error: " + e.getMessage());
-
-            } finally {
-
-                if (opcion != 12) {
-                    System.out.println(
-                        "Operacion finalizada, regresaras al menu principal."
-                    );
-                }
             }
         }
 
